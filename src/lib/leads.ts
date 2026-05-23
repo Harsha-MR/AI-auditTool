@@ -8,6 +8,7 @@ export const LeadPayloadSchema = z.object({
   teamSize: z.number().int().positive().optional(),
   baselineSpendUsd: z.number().nonnegative(),
   savingsUsd: z.number().nonnegative(),
+  auditSummary: z.string().min(1).optional(),
   primaryUseCase: z.string().min(1),
   region: z.string().min(1).optional(),
   publicAuditId: z.string().optional(),

@@ -109,6 +109,7 @@ export const AuditResults = ({
       teamSize: Number(leadForm.teamSize) || undefined,
       baselineSpendUsd: result.baselineSpendUsd,
       savingsUsd: result.totalSavingsUsd,
+      auditSummary: summary ?? undefined,
       primaryUseCase: summaryContext.primaryUseCase,
       region: summaryContext.region,
       publicAuditId: publicAuditId ?? undefined,
