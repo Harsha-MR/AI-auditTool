@@ -60,7 +60,6 @@ const createUsage = (): UsageDraft => ({
 });
 
 export const AuditForm = () => {
-  const [hasHydrated, setHasHydrated] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [result, setResult] = useState<ReturnType<typeof runAudit> | null>(
@@ -69,12 +68,31 @@ export const AuditForm = () => {
   const [summaryContext, setSummaryContext] = useState<
     AuditSummaryContext | null
   >(null);
-  const [draft, setDraft] = useState<AuditDraft>({
-    companyName: "",
-    teamSize: "",
-    primaryUseCase: "coding",
-    region: "",
-    usage: [createUsage()],
+  const [draft, setDraft] = useState<AuditDraft>(() => {
+    const initial: AuditDraft = {
+      companyName: "",
+      teamSize: "",
+      primaryUseCase: "coding",
+      region: "",
+      usage: [createUsage()],
+    };
+
+    if (typeof window === "undefined") {
+      return initial;
+    }
+
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (!stored) {
+      return initial;
+    }
+
+    try {
+      const parsed = JSON.parse(stored) as AuditDraft;
+      return { ...initial, ...parsed };
+    } catch {
+      window.localStorage.removeItem(STORAGE_KEY);
+      return initial;
+    }
   });
   const progress = ((stepIndex + 1) / STEPS.length) * 100;
   const fieldClass =
@@ -83,28 +101,8 @@ export const AuditForm = () => {
     "w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-neutral-900 shadow-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-200/70";
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (!stored) {
-      setHasHydrated(true);
-      return;
-    }
-
-    try {
-      const parsed = JSON.parse(stored) as AuditDraft;
-      setDraft((prev) => ({ ...prev, ...parsed }));
-    } catch {
-      window.localStorage.removeItem(STORAGE_KEY);
-    } finally {
-      setHasHydrated(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!hasHydrated) {
-      return;
-    }
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-  }, [draft, hasHydrated]);
+  }, [draft]);
 
   const totals = useMemo(() => {
     const totalSpend = draft.usage.reduce(
