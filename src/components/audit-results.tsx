@@ -293,7 +293,7 @@ export const AuditResults = ({
                         name: event.target.value,
                       }))
                     }
-                    className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm outline-none transition focus:border-emerald-400"
+                    className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none transition focus:border-emerald-400"
                     placeholder="Taylor Reed"
                   />
                 </label>
@@ -309,7 +309,7 @@ export const AuditResults = ({
                     }
                     type="email"
                     required
-                    className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm outline-none transition focus:border-emerald-400"
+                    className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none transition focus:border-emerald-400"
                     placeholder="you@company.com"
                   />
                 </label>
@@ -325,7 +325,7 @@ export const AuditResults = ({
                         company: event.target.value,
                       }))
                     }
-                    className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm outline-none transition focus:border-emerald-400"
+                    className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none transition focus:border-emerald-400"
                     placeholder="Company name"
                   />
                 </label>
@@ -339,7 +339,7 @@ export const AuditResults = ({
                         role: event.target.value,
                       }))
                     }
-                    className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm outline-none transition focus:border-emerald-400"
+                    className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none transition focus:border-emerald-400"
                     placeholder="Engineering lead"
                   />
                 </label>
@@ -356,7 +356,7 @@ export const AuditResults = ({
                   }
                   type="number"
                   min={1}
-                  className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm outline-none transition focus:border-emerald-400"
+                  className="w-full rounded-xl border border-black/10 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-400 outline-none transition focus:border-emerald-400"
                   placeholder="18"
                 />
               </label>
