@@ -315,7 +315,7 @@ export const AuditForm = () => {
               <div className="grid gap-5 sm:grid-cols-2">
                 <label className="space-y-2 text-sm text-white/70">
                   <span className="font-medium text-white">
-                    Company name (optional)
+                    Company name
                   </span>
                   <input
                     value={draft.companyName}
@@ -404,14 +404,14 @@ export const AuditForm = () => {
                       className="rounded-2xl border border-white/10 bg-white/5 p-5"
                     >
                       <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-semibold text-white">
-                          Tool {index + 1}
+                        <h3 className="text-lg font-semibold text-white">
+                          Tool {index + 1}:
                         </h3>
                         {draft.usage.length > 1 && (
                           <button
                             type="button"
                             onClick={() => removeUsage(index)}
-                            className="text-xs font-medium text-white/60 transition hover:text-white"
+                            className="text-xs font-medium text-white/60 transition hover:text-white "
                           >
                             Remove
                           </button>
@@ -419,7 +419,7 @@ export const AuditForm = () => {
                       </div>
                       <div className="mt-4 grid gap-4 sm:grid-cols-2">
                         <label className="space-y-2 text-sm text-white/70">
-                          <span className="font-medium text-white">Tool</span>
+                          <span className="font-medium text-white">Tool Name</span>
                           <select
                             value={entry.toolId}
                             onChange={(event) => {
