@@ -109,13 +109,20 @@ export const generateAuditSummary = async (context: AuditSummaryContext) => {
 
   try {
     if (anthropicKey) {
+      console.log("Calling Anthropic API for audit summary...");
       return await callAnthropic(prompt, anthropicKey);
+
     }
     if (groqKey) {
+      console.log("Calling Groq API for audit summary...");
       return await callGroq(prompt, groqKey);
     }
+    console.log("No API keys configured for audit summary generation, using fallback.");
     return buildFallbackSummary(context);
-  } catch {
+    
+  } catch(err: unknown) {
+    console.log("Error calling LLM API for audit summary, using fallback.");
+    console.error(err instanceof Error ? err.message : err);
     return buildFallbackSummary(context);
   }
 };
