@@ -33,11 +33,16 @@ const SYSTEM_PROMPT =
   "You are a finance analyst. Provide a crisp executive summary without bullet lists.";
 
 const callAnthropic = async (prompt: string, apiKey: string) => {
+  const trimmedKey = apiKey.trim();
+  if (!trimmedKey) {
+    throw new Error("Anthropic API key is empty");
+  }
+
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-api-key": apiKey,
+      "x-api-key": trimmedKey,
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
@@ -50,7 +55,10 @@ const callAnthropic = async (prompt: string, apiKey: string) => {
   });
 
   if (!response.ok) {
-    throw new Error("Anthropic API request failed");
+    const errorBody = await response.text();
+    throw new Error(
+      `Anthropic API request failed (${response.status}): ${errorBody}`
+    );
   }
 
   const data = (await response.json()) as {
@@ -66,14 +74,19 @@ const callAnthropic = async (prompt: string, apiKey: string) => {
 };
 
 const callGroq = async (prompt: string, apiKey: string) => {
+  const trimmedKey = apiKey.trim();
+  if (!trimmedKey) {
+    throw new Error("Groq API key is empty");
+  }
+
   const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${apiKey}`,
+      Authorization: `Bearer ${trimmedKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "llama-3.1-70b-versatile",
+      model: "llama-3.3-70b-versatile",
       temperature: 0.2,
       max_tokens: 220,
       messages: [
@@ -87,7 +100,10 @@ const callGroq = async (prompt: string, apiKey: string) => {
   });
 
   if (!response.ok) {
-    throw new Error("Groq API request failed");
+    const errorBody = await response.text();
+    throw new Error(
+      `Groq API request failed (${response.status}): ${errorBody}`
+    );
   }
 
   const data = (await response.json()) as {
@@ -107,24 +123,39 @@ export const generateAuditSummary = async (context: AuditSummaryContext) => {
   const anthropicKey = process.env.ANTHROPIC_API_KEY;
   const groqKey = process.env.GROQ_API_KEY;
 
-  try {
-    if (anthropicKey) {
-      console.log("Calling Anthropic API for audit summary...");
-      return await callAnthropic(prompt, anthropicKey);
-
-    }
-    if (groqKey) {
-      console.log("Calling Groq API for audit summary...");
-      return await callGroq(prompt, groqKey);
-    }
-    console.log("No API keys configured for audit summary generation, using fallback.");
-    return buildFallbackSummary(context);
-    
-  } catch(err: unknown) {
-    console.log("Error calling LLM API for audit summary, using fallback.");
-    console.error(err instanceof Error ? err.message : err);
+  if (!anthropicKey && !groqKey) {
+    console.log(
+      "No API keys configured for audit summary generation, using fallback."
+    );
     return buildFallbackSummary(context);
   }
+
+  if (anthropicKey) {
+    try {
+      console.log("Calling Anthropic API for audit summary...");
+      return await callAnthropic(prompt, anthropicKey);
+    } catch (err: unknown) {
+      console.error(
+        "Anthropic API failed for audit summary:",
+        err instanceof Error ? err.message : err
+      );
+    }
+  }
+
+  if (groqKey) {
+    try {
+      console.log("Calling Groq API for audit summary...");
+      return await callGroq(prompt, groqKey);
+    } catch (err: unknown) {
+      console.error(
+        "Groq API failed for audit summary:",
+        err instanceof Error ? err.message : err
+      );
+    }
+  }
+
+  console.log("LLM calls failed, using fallback.");
+  return buildFallbackSummary(context);
 };
 
 /*
