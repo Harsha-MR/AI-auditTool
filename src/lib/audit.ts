@@ -47,11 +47,14 @@ type Candidate = {
 
 const estimatePlanCost = (plan: PlanDefinition, seats: number) => {
   if (plan.billing === "seat") {
+    if (plan.seatPriceUsd === undefined) {
+      return null;
+    }
     const seatCount = Math.max(seats, plan.minSeats ?? 0, 1);
-    return seatCount * (plan.seatPriceUsd ?? 0);
+    return seatCount * plan.seatPriceUsd;
   }
   if (plan.billing === "flat") {
-    return plan.flatMonthlyUsd ?? 0;
+    return plan.flatMonthlyUsd ?? null;
   }
   return null;
 };
@@ -80,8 +83,16 @@ const pickAlternative = (
   return (
     alternatives.find((alt) =>
       alt.appliesToUseCases ? alt.appliesToUseCases.includes(useCase) : true
-    ) ?? alternatives[0]
+    ) ?? null
   );
+};
+
+const ACTION_PRIORITY: Record<RecommendationAction, number> = {
+  "right-size": 4,
+  switch: 3,
+  downgrade: 2,
+  credits: 1,
+  keep: 0,
 };
 
 const evaluateEntry = (input: AuditInput, entry: UsageEntry): ToolRecommendation => {
@@ -185,7 +196,13 @@ const evaluateEntry = (input: AuditInput, entry: UsageEntry): ToolRecommendation
     };
   }
 
-  const best = candidates.sort((a, b) => b.savingsUsd - a.savingsUsd)[0];
+  const best = candidates.sort((a, b) => {
+    const savingsDiff = b.savingsUsd - a.savingsUsd;
+    if (savingsDiff !== 0) {
+      return savingsDiff;
+    }
+    return ACTION_PRIORITY[b.action] - ACTION_PRIORITY[a.action];
+  })[0];
 
   return {
     toolId: entry.toolId,

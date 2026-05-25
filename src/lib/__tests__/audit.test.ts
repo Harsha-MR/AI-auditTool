@@ -86,9 +86,9 @@ describe("runAudit", () => {
       primaryUseCase: "coding",
       usage: [
         {
-          toolId: "github-copilot",
-          planId: "individual",
-          monthlySpendUsd: 10,
+          toolId: "chatgpt",
+          planId: "plus",
+          monthlySpendUsd: 20,
           seats: 1,
         },
       ],

@@ -34,14 +34,14 @@ const TOOL_CATALOG: ToolDefinition[] = [
     label: "Cursor",
     plans: [
       { id: "hobby", label: "Hobby", tier: 1, billing: "seat", seatPriceUsd: 0 },
-      { id: "pro", label: "Pro", tier: 2, billing: "seat", seatPriceUsd: 20 },
-      { id: "business", label: "Business", tier: 3, billing: "seat", seatPriceUsd: 40, minSeats: 5 },
-      { id: "enterprise", label: "Enterprise", tier: 4, billing: "seat", seatPriceUsd: 60, minSeats: 25 },
+      { id: "pro", label: "Individual", tier: 2, billing: "seat", seatPriceUsd: 20 },
+      { id: "business", label: "Teams", tier: 3, billing: "seat", seatPriceUsd: 40 },
+      { id: "enterprise", label: "Enterprise (contact sales)", tier: 4, billing: "seat" },
     ],
     alternatives: [
       {
         toolId: "github-copilot",
-        planId: "business",
+        planId: "individual",
         reason: "Comparable coding copilots with lower seat pricing for small teams.",
         appliesToUseCases: ["coding", "mixed"],
       },
@@ -53,9 +53,9 @@ const TOOL_CATALOG: ToolDefinition[] = [
     id: "github-copilot",
     label: "GitHub Copilot",
     plans: [
-      { id: "individual", label: "Individual", tier: 1, billing: "seat", seatPriceUsd: 10 },
-      { id: "business", label: "Business", tier: 2, billing: "seat", seatPriceUsd: 19 },
-      { id: "enterprise", label: "Enterprise", tier: 3, billing: "seat", seatPriceUsd: 39, minSeats: 25 },
+      { id: "free", label: "Free", tier: 1, billing: "seat", seatPriceUsd: 0 },
+      { id: "individual", label: "Pro", tier: 2, billing: "seat", seatPriceUsd: 10 },
+      { id: "pro-plus", label: "Pro+", tier: 3, billing: "seat", seatPriceUsd: 39 },
     ],
     alternatives: [
       {
@@ -74,9 +74,7 @@ const TOOL_CATALOG: ToolDefinition[] = [
     plans: [
       { id: "free", label: "Free", tier: 1, billing: "seat", seatPriceUsd: 0 },
       { id: "pro", label: "Pro", tier: 2, billing: "seat", seatPriceUsd: 20 },
-      { id: "max", label: "Max", tier: 3, billing: "seat", seatPriceUsd: 60 },
-      { id: "team", label: "Team", tier: 4, billing: "seat", seatPriceUsd: 30, minSeats: 5 },
-      { id: "enterprise", label: "Enterprise", tier: 5, billing: "seat", seatPriceUsd: 70, minSeats: 25 },
+      { id: "max", label: "Max (from $100)", tier: 3, billing: "seat", seatPriceUsd: 100 },
     ],
     alternatives: [
       {
@@ -94,8 +92,8 @@ const TOOL_CATALOG: ToolDefinition[] = [
     label: "ChatGPT",
     plans: [
       { id: "plus", label: "Plus", tier: 1, billing: "seat", seatPriceUsd: 20 },
-      { id: "team", label: "Team", tier: 2, billing: "seat", seatPriceUsd: 30, minSeats: 2 },
-      { id: "enterprise", label: "Enterprise", tier: 3, billing: "seat", seatPriceUsd: 60, minSeats: 25 },
+      { id: "team", label: "Business", tier: 2, billing: "seat", seatPriceUsd: 25, minSeats: 2 },
+      { id: "enterprise", label: "Enterprise (contact sales)", tier: 3, billing: "seat" },
     ],
     alternatives: [
       {
@@ -146,9 +144,7 @@ const TOOL_CATALOG: ToolDefinition[] = [
     id: "gemini",
     label: "Gemini",
     plans: [
-      { id: "pro", label: "Pro", tier: 1, billing: "seat", seatPriceUsd: 20 },
-      { id: "ultra", label: "Ultra", tier: 2, billing: "seat", seatPriceUsd: 35 },
-      { id: "api", label: "API", tier: 3, billing: "usage" },
+      { id: "api", label: "API (usage)", tier: 1, billing: "usage" },
     ],
     alternatives: [
       {
@@ -166,9 +162,10 @@ const TOOL_CATALOG: ToolDefinition[] = [
     label: "Windsurf",
     plans: [
       { id: "starter", label: "Starter", tier: 1, billing: "seat", seatPriceUsd: 0 },
-      { id: "pro", label: "Pro", tier: 2, billing: "seat", seatPriceUsd: 15 },
-      { id: "team", label: "Team", tier: 3, billing: "seat", seatPriceUsd: 29, minSeats: 5 },
-      { id: "enterprise", label: "Enterprise", tier: 4, billing: "seat", seatPriceUsd: 49, minSeats: 25 },
+      { id: "pro", label: "Pro", tier: 2, billing: "seat", seatPriceUsd: 20 },
+      { id: "max", label: "Max", tier: 3, billing: "seat", seatPriceUsd: 200 },
+      { id: "team", label: "Teams", tier: 4, billing: "seat", seatPriceUsd: 40 },
+      { id: "enterprise", label: "Enterprise (contact sales)", tier: 5, billing: "seat" },
     ],
     alternatives: [
       {

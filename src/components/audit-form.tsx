@@ -1,5 +1,6 @@
 "use client";
 
+import type { ChangeEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { runAudit } from "@/lib/audit";
 import { AuditInputSchema, PrimaryUseCase, Region } from "@/lib/schema";
@@ -60,7 +61,6 @@ const createUsage = (): UsageDraft => ({
 });
 
 export const AuditForm = () => {
-  const [hasHydrated, setHasHydrated] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [result, setResult] = useState<ReturnType<typeof runAudit> | null>(
@@ -69,42 +69,42 @@ export const AuditForm = () => {
   const [summaryContext, setSummaryContext] = useState<
     AuditSummaryContext | null
   >(null);
-  const [draft, setDraft] = useState<AuditDraft>({
-    companyName: "",
-    teamSize: "",
-    primaryUseCase: "coding",
-    region: "",
-    usage: [createUsage()],
-  });
-  const progress = ((stepIndex + 1) / STEPS.length) * 100;
-  const fieldClass =
-    "w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-neutral-900 shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-amber-500 focus:ring-2 focus:ring-amber-200/70";
-  const selectClass =
-    "w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-neutral-900 shadow-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-200/70";
+  const [uploadNames, setUploadNames] = useState<string[]>([]);
+  const [draft, setDraft] = useState<AuditDraft>(() => {
+    const initial: AuditDraft = {
+      companyName: "",
+      teamSize: "",
+      primaryUseCase: "coding",
+      region: "",
+      usage: [createUsage()],
+    };
 
-  useEffect(() => {
+    if (typeof window === "undefined") {
+      return initial;
+    }
+
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (!stored) {
-      setHasHydrated(true);
-      return;
+      return initial;
     }
 
     try {
       const parsed = JSON.parse(stored) as AuditDraft;
-      setDraft((prev) => ({ ...prev, ...parsed }));
+      return { ...initial, ...parsed };
     } catch {
       window.localStorage.removeItem(STORAGE_KEY);
-    } finally {
-      setHasHydrated(true);
+      return initial;
     }
-  }, []);
+  });
+  const progress = ((stepIndex + 1) / STEPS.length) * 100;
+  const fieldClass =
+    "w-full rounded-xl border border-white/10 bg-[#0f0b1a] px-4 py-3 text-sm text-white placeholder:text-white/40 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.03)] outline-none transition focus:border-emerald-400/70 focus:ring-2 focus:ring-emerald-400/30";
+  const selectClass =
+    "w-full appearance-none rounded-xl border border-white/10 bg-[#0f0b1a] px-4 py-3 text-sm text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.03)] outline-none transition focus:border-emerald-400/70 focus:ring-2 focus:ring-emerald-400/30";
 
   useEffect(() => {
-    if (!hasHydrated) {
-      return;
-    }
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-  }, [draft, hasHydrated]);
+  }, [draft]);
 
   const totals = useMemo(() => {
     const totalSpend = draft.usage.reduce(
@@ -118,6 +118,28 @@ export const AuditForm = () => {
 
     return { totalSpend, totalSeats };
   }, [draft.usage]);
+
+  const usageBreakdown = useMemo(() => {
+    const totalSpend = draft.usage.reduce(
+      (sum, entry) => sum + Number(entry.monthlySpendUsd || 0),
+      0
+    );
+    return draft.usage.map((entry) => {
+      const tool = TOOL_DEFINITIONS.find((item) => item.id === entry.toolId);
+      const spend = Number(entry.monthlySpendUsd || 0);
+      const ratio = totalSpend ? Math.round((spend / totalSpend) * 100) : 0;
+      return {
+        label: tool?.label ?? "Tool",
+        spend,
+        ratio,
+      };
+    });
+  }, [draft.usage]);
+
+  const handleUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files ?? []);
+    setUploadNames(files.map((file) => file.name));
+  };
 
   const updateDraft = (key: keyof AuditDraft, value: string) => {
     setDraft((prev) => ({ ...prev, [key]: value }));
@@ -244,57 +266,45 @@ export const AuditForm = () => {
   }
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[minmax(0,_1fr)_340px]">
+    <div className="grid gap-8 xl:grid-cols-[minmax(0,_1fr)_360px]">
       <div className="space-y-8">
-        <div className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.3em] text-amber-900/70">
-            Credex spend audit
-          </p>
-          <h1 className="text-3xl font-semibold leading-tight text-neutral-900 sm:text-4xl">
-            AI Spend Audit Tool
-          </h1>
-          <p className="text-base text-neutral-600">
-            Audit AI tool spend by plan, seats, and use case in minutes.
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-black/10 bg-white/90 p-6 shadow-[0_18px_60px_-40px_rgba(20,20,20,0.6)]">
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
           <div className="space-y-2">
-            <div className="flex flex-wrap items-center justify-between gap-2 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-neutral-500">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-white/60">
               <span>
                 Step {stepIndex + 1} of {STEPS.length}
               </span>
               <span>{STEPS[stepIndex].title}</span>
             </div>
-            <div className="h-1.5 w-full rounded-full bg-neutral-200">
+            <div className="h-1.5 w-full rounded-full bg-white/10">
               <div
-                className="h-1.5 rounded-full bg-amber-500 transition-[width]"
+                className="h-1.5 rounded-full bg-gradient-to-r from-violet-500 to-emerald-400 transition-[width]"
                 style={{ width: `${progress}%` }}
               />
             </div>
           </div>
-          <div className="flex flex-wrap gap-4">
+          <div className="mt-5 flex flex-wrap gap-3">
             {STEPS.map((step, index) => (
               <div
                 key={step.id}
                 className={`flex items-center gap-3 rounded-full border px-4 py-2 text-sm transition ${
                   index === stepIndex
-                    ? "border-amber-500/60 bg-amber-50 text-amber-900"
-                    : "border-black/10 text-neutral-500"
+                    ? "border-violet-400/50 bg-violet-500/10 text-white"
+                    : "border-white/10 text-white/60"
                 }`}
               >
                 <span
                   className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ${
                     index === stepIndex
-                      ? "bg-amber-500 text-white"
-                      : "bg-neutral-200 text-neutral-700"
+                      ? "bg-violet-500 text-white"
+                      : "bg-white/10 text-white/60"
                   }`}
                 >
                   {index + 1}
                 </span>
                 <div>
                   <p className="font-medium">{step.title}</p>
-                  <p className="text-xs text-neutral-500">{step.description}</p>
+                  <p className="text-xs text-white/50">{step.description}</p>
                 </div>
               </div>
             ))}
@@ -303,9 +313,9 @@ export const AuditForm = () => {
           <div className="mt-8 space-y-6">
             {stepIndex === 0 && (
               <div className="grid gap-5 sm:grid-cols-2">
-                <label className="space-y-2 text-sm text-neutral-700">
-                  <span className="font-medium text-neutral-800">
-                    Company name (optional)
+                <label className="space-y-2 text-sm text-white/70">
+                  <span className="font-medium text-white">
+                    Company name
                   </span>
                   <input
                     value={draft.companyName}
@@ -316,8 +326,8 @@ export const AuditForm = () => {
                     placeholder="Northwind Analytics"
                   />
                 </label>
-                <label className="space-y-2 text-sm text-neutral-700">
-                  <span className="font-medium text-neutral-800">Team size</span>
+                <label className="space-y-2 text-sm text-white/70">
+                  <span className="font-medium text-white">Team size</span>
                   <input
                     value={draft.teamSize}
                     onChange={(event) =>
@@ -329,11 +339,11 @@ export const AuditForm = () => {
                     placeholder="18"
                   />
                   {errors.teamSize && (
-                    <p className="text-xs text-red-600">{errors.teamSize}</p>
+                    <p className="text-xs text-rose-300">{errors.teamSize}</p>
                   )}
                 </label>
-                <label className="space-y-2 text-sm text-neutral-700">
-                  <span className="font-medium text-neutral-800">
+                <label className="space-y-2 text-sm text-white/70">
+                  <span className="font-medium text-white">
                     Primary use case
                   </span>
                   <select
@@ -344,27 +354,37 @@ export const AuditForm = () => {
                     className={selectClass}
                   >
                     {PRIMARY_USE_CASES.map((option) => (
-                      <option key={option.value} value={option.value}>
+                      <option
+                        key={option.value}
+                        value={option.value}
+                        className="bg-[#0f0b1a]"
+                      >
                         {option.label}
                       </option>
                     ))}
                   </select>
                   {errors.primaryUseCase && (
-                    <p className="text-xs text-red-600">
+                    <p className="text-xs text-rose-300">
                       {errors.primaryUseCase}
                     </p>
                   )}
                 </label>
-                <label className="space-y-2 text-sm text-neutral-700">
-                  <span className="font-medium text-neutral-800">Region</span>
+                <label className="space-y-2 text-sm text-white/70">
+                  <span className="font-medium text-white">Region</span>
                   <select
                     value={draft.region}
                     onChange={(event) => updateDraft("region", event.target.value)}
                     className={selectClass}
                   >
-                    <option value="">Select region</option>
+                    <option value="" className="bg-[#0f0b1a]">
+                      Select region
+                    </option>
                     {REGIONS.map((region) => (
-                      <option key={region.value} value={region.value}>
+                      <option
+                        key={region.value}
+                        value={region.value}
+                        className="bg-[#0f0b1a]"
+                      >
                         {region.label}
                       </option>
                     ))}
@@ -381,27 +401,25 @@ export const AuditForm = () => {
                   return (
                     <div
                       key={`usage-${index}`}
-                      className="rounded-2xl border border-black/10 bg-neutral-50/60 p-5"
+                      className="rounded-2xl border border-white/10 bg-white/5 p-5"
                     >
                       <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-semibold text-neutral-800">
-                          Tool {index + 1}
+                        <h3 className="text-lg font-semibold text-white">
+                          Tool {index + 1}:
                         </h3>
                         {draft.usage.length > 1 && (
                           <button
                             type="button"
                             onClick={() => removeUsage(index)}
-                            className="text-xs font-medium text-neutral-500 transition hover:text-neutral-900"
+                            className="text-xs font-medium text-white/60 transition hover:text-white "
                           >
                             Remove
                           </button>
                         )}
                       </div>
                       <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                        <label className="space-y-2 text-sm text-neutral-700">
-                          <span className="font-medium text-neutral-800">
-                            Tool
-                          </span>
+                        <label className="space-y-2 text-sm text-white/70">
+                          <span className="font-medium text-white">Tool Name</span>
                           <select
                             value={entry.toolId}
                             onChange={(event) => {
@@ -416,23 +434,27 @@ export const AuditForm = () => {
                             }}
                             className={selectClass}
                           >
-                            <option value="">Select tool</option>
+                            <option value="" className="bg-[#0f0b1a]">
+                              Select tool
+                            </option>
                             {TOOL_DEFINITIONS.map((tool) => (
-                              <option key={tool.id} value={tool.id}>
+                              <option
+                                key={tool.id}
+                                value={tool.id}
+                                className="bg-[#0f0b1a]"
+                              >
                                 {tool.label}
                               </option>
                             ))}
                           </select>
                           {errors[`usage-${index}-toolId`] && (
-                            <p className="text-xs text-red-600">
+                            <p className="text-xs text-rose-300">
                               {errors[`usage-${index}-toolId`]}
                             </p>
                           )}
                         </label>
-                        <label className="space-y-2 text-sm text-neutral-700">
-                          <span className="font-medium text-neutral-800">
-                            Plan
-                          </span>
+                        <label className="space-y-2 text-sm text-white/70">
+                          <span className="font-medium text-white">Plan</span>
                           <select
                             value={entry.planId}
                             onChange={(event) =>
@@ -440,21 +462,27 @@ export const AuditForm = () => {
                             }
                             className={selectClass}
                           >
-                            <option value="">Select plan</option>
+                            <option value="" className="bg-[#0f0b1a]">
+                              Select plan
+                            </option>
                             {plans.map((plan) => (
-                              <option key={plan.id} value={plan.id}>
+                              <option
+                                key={plan.id}
+                                value={plan.id}
+                                className="bg-[#0f0b1a]"
+                              >
                                 {plan.label}
                               </option>
                             ))}
                           </select>
                           {errors[`usage-${index}-planId`] && (
-                            <p className="text-xs text-red-600">
+                            <p className="text-xs text-rose-300">
                               {errors[`usage-${index}-planId`]}
                             </p>
                           )}
                         </label>
-                        <label className="space-y-2 text-sm text-neutral-700">
-                          <span className="font-medium text-neutral-800">
+                        <label className="space-y-2 text-sm text-white/70">
+                          <span className="font-medium text-white">
                             Monthly spend (USD)
                           </span>
                           <input
@@ -472,13 +500,13 @@ export const AuditForm = () => {
                             placeholder="1200"
                           />
                           {errors[`usage-${index}-monthlySpendUsd`] && (
-                            <p className="text-xs text-red-600">
+                            <p className="text-xs text-rose-300">
                               {errors[`usage-${index}-monthlySpendUsd`]}
                             </p>
                           )}
                         </label>
-                        <label className="space-y-2 text-sm text-neutral-700">
-                          <span className="font-medium text-neutral-800">
+                        <label className="space-y-2 text-sm text-white/70">
+                          <span className="font-medium text-white">
                             Active seats
                           </span>
                           <input
@@ -492,7 +520,7 @@ export const AuditForm = () => {
                             placeholder="12"
                           />
                           {errors[`usage-${index}-seats`] && (
-                            <p className="text-xs text-red-600">
+                            <p className="text-xs text-rose-300">
                               {errors[`usage-${index}-seats`]}
                             </p>
                           )}
@@ -504,7 +532,7 @@ export const AuditForm = () => {
                 <button
                   type="button"
                   onClick={addUsage}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-amber-700"
+                  className="w-full rounded-xl border border-dashed border-white/20 bg-white/5 px-4 py-3 text-sm font-medium text-white/70 transition hover:border-white/40 hover:text-white"
                 >
                   + Add another tool
                 </button>
@@ -512,58 +540,29 @@ export const AuditForm = () => {
             )}
           </div>
 
+          {errors.form && (
+            <p className="mt-4 text-sm text-rose-300">{errors.form}</p>
+          )}
+
           <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
             <button
               type="button"
               onClick={moveBack}
               disabled={stepIndex === 0}
-              className="rounded-full border border-black/10 px-5 py-2 text-sm font-medium text-neutral-600 transition disabled:opacity-40"
+              className="rounded-full border border-white px-5 py-2 text-xs font-semibold text-white transition hover:border-white/30 disabled:opacity-40"
             >
               Back
             </button>
             <button
               type="button"
               onClick={moveNext}
-              className="rounded-full bg-neutral-900 px-6 py-2 text-sm font-semibold text-white transition hover:bg-neutral-800"
+              className="rounded-full bg-gradient-to-r from-violet-500 to-emerald-400 px-5 py-2 text-xs font-semibold text-white transition hover:from-violet-400 hover:to-emerald-300"
             >
               {stepIndex === STEPS.length - 1 ? "Generate audit" : "Continue"}
             </button>
-            {errors.form && (
-              <p className="w-full text-xs text-red-600">{errors.form}</p>
-            )}
           </div>
         </div>
       </div>
-
-      <aside className="space-y-4 rounded-2xl border border-black/10 bg-white/85 p-6 lg:sticky lg:top-8">
-        <div className="space-y-1">
-          <p className="text-xs uppercase tracking-[0.3em] text-neutral-500">
-            Live snapshot
-          </p>
-          <h2 className="text-lg font-semibold text-neutral-900">Spend rollup</h2>
-        </div>
-        <div className="space-y-4 text-sm">
-          <div className="rounded-xl border border-black/10 bg-neutral-50/70 p-4">
-            <p className="text-xs uppercase tracking-widest text-neutral-500">
-              Monthly spend
-            </p>
-            <p className="mt-2 text-2xl font-semibold text-neutral-900">
-              ${totals.totalSpend.toLocaleString()}
-            </p>
-          </div>
-          <div className="rounded-xl border border-black/10 bg-neutral-50/70 p-4">
-            <p className="text-xs uppercase tracking-widest text-neutral-500">
-              Active seats
-            </p>
-            <p className="mt-2 text-2xl font-semibold text-neutral-900">
-              {totals.totalSeats.toLocaleString()}
-            </p>
-          </div>
-        </div>
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-          Audits never ask for email before results are shown.
-        </div>
-      </aside>
     </div>
   );
 };
