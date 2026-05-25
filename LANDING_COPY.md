@@ -1,20 +1,20 @@
 # Landing Page Copy
 
 ## Hero headline
-TODO (<= 10 words)
+Find wasted AI spend in minutes
 
 ## Subheadline
-TODO (<= 25 words)
+Audit every AI tool, right-size seats, and capture savings with defensible recommendations.
 
 ## Primary CTA copy
-TODO
+Run a free audit
 
 ## Social proof (mocked OK)
-TODO
+Used by lean teams to cut AI tool costs by 10-35%.
 
 ## FAQ
-1. TODO
-2. TODO
-3. TODO
-4. TODO
-5. TODO
+1. How long does the audit take?
+2. Do I need to connect billing data?
+3. What data is public on share links?
+4. How accurate are the recommendations?
+5. Can you help us negotiate enterprise pricing?

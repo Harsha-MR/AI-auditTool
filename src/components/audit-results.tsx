@@ -127,6 +127,7 @@ export const AuditResults = ({
   };
 
   const savingsTier = result.totalSavingsUsd;
+  const annualSavingsUsd = result.totalSavingsUsd * 12;
   const showCredex = savingsTier >= 500;
   const showHonesty = savingsTier < 100;
   const baselineValue = result.baselineSpendUsd || 1;
@@ -185,6 +186,9 @@ export const AuditResults = ({
           </p>
           <p className="mt-3 text-2xl font-semibold text-amber-100">
             {formatUsd(result.totalSavingsUsd)}
+          </p>
+          <p className="mt-2 text-xs text-amber-100/80">
+            Monthly: {formatUsd(result.totalSavingsUsd)} · Annual: {formatUsd(annualSavingsUsd)}
           </p>
         </div>
       </div>
