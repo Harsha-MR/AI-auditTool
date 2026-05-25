@@ -10,10 +10,10 @@ A free AI spend audit tool for startup teams to benchmark tool spend, identify p
 - Lead capture with Supabase storage and transactional email delivery.
 
 ## Screenshots
-- Audit Input Form: ![Audit Form: Page-1](image.png)![Audit Form: Page-2](image-1.png)
-- Results: ![Audit Result: Image-1](image-2.png)![Audit Result: Image-2](image-3.png)![Audit Result: Image-3](image-4.png)
-- Sharable Report: ![Sharable Audit Report](image-5.png)
-- Mail: ![Mail: Image-1](image-6.png)![Mail: Image-2](image-7.png)
+- Audit Input Form: ![Audit Form: Page-1](./public/output_img/image.png)![Audit Form: Page-2](./public/output_img/image-1.png)
+- Results: ![Audit Result: Image-1](/public/output_img/image-2.png)![Audit Result: Image-2](./public/output_img/image-3.png)![Audit Result: Image-3](/public/output_img/image-4.png)
+- Sharable Report: ![Sharable Audit Report](/public/output_img/image-5.png)
+- Mail: ![Mail: Image-1](/public/output_img/image-6.png)![Mail: Image-2](/public/output_img/image-7.png)
 
 ## Quick start
 ```bash
