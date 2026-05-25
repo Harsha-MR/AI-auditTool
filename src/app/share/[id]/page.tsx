@@ -103,6 +103,7 @@ export default async function SharePage(props: {
   }
 
   const payload = audit.public_payload;
+  const annualSavingsUsd = payload.totalSavingsUsd * 12;
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_#fdf6e7,_#f7f3ee_45%,_#eef2f2_100%)] px-6 py-16">
@@ -142,6 +143,9 @@ export default async function SharePage(props: {
             </p>
             <p className="mt-3 text-2xl font-semibold text-amber-900">
               {formatUsd(payload.totalSavingsUsd)}
+            </p>
+            <p className="mt-2 text-xs text-amber-800/80">
+              Monthly: {formatUsd(payload.totalSavingsUsd)} · Annual: {formatUsd(annualSavingsUsd)}
             </p>
           </div>
         </div>

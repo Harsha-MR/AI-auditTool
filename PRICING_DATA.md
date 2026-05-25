@@ -1,43 +1,40 @@
 # Pricing Data Sources
 
-> TODO: Replace placeholders with current pricing and verified dates from official vendor pages.
+Verified: 2026-05-25
 
 ## Cursor
-- Hobby: $0/user/month — TODO URL — verified YYYY-MM-DD
-- Pro: $20/user/month — TODO URL — verified YYYY-MM-DD
-- Business: $40/user/month — TODO URL — verified YYYY-MM-DD
-- Enterprise: $60/user/month — TODO URL — verified YYYY-MM-DD
+- Hobby: $0/user/month — https://cursor.com/pricing — verified 2026-05-25
+- Individual: $20/user/month — https://cursor.com/pricing — verified 2026-05-25
+- Teams: $40/user/month — https://cursor.com/pricing — verified 2026-05-25
+- Enterprise: Custom pricing (contact sales) — https://cursor.com/pricing — verified 2026-05-25
 
 ## GitHub Copilot
-- Individual: $10/user/month — TODO URL — verified YYYY-MM-DD
-- Business: $19/user/month — TODO URL — verified YYYY-MM-DD
-- Enterprise: $39/user/month — TODO URL — verified YYYY-MM-DD
+- Free: $0/user/month — https://github.com/features/copilot/plans — verified 2026-05-25
+- Pro: $10/user/month — https://github.com/features/copilot/plans — verified 2026-05-25
+- Pro+: $39/user/month — https://github.com/features/copilot/plans — verified 2026-05-25
 
 ## Claude (app)
-- Free: $0/user/month — TODO URL — verified YYYY-MM-DD
-- Pro: $20/user/month — TODO URL — verified YYYY-MM-DD
-- Max: $60/user/month — TODO URL — verified YYYY-MM-DD
-- Team: $30/user/month — TODO URL — verified YYYY-MM-DD
-- Enterprise: $70/user/month — TODO URL — verified YYYY-MM-DD
+- Free: $0/user/month — https://claude.com/pricing — verified 2026-05-25
+- Pro: $20/user/month (monthly) — https://claude.com/pricing — verified 2026-05-25
+- Max: From $100/user/month — https://claude.com/pricing — verified 2026-05-25
 
 ## ChatGPT
-- Plus: $20/user/month — TODO URL — verified YYYY-MM-DD
-- Team: $30/user/month — TODO URL — verified YYYY-MM-DD
-- Enterprise: $60/user/month — TODO URL — verified YYYY-MM-DD
+- Plus: $20/user/month — https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus — verified 2026-05-25
+- Business: $25/user/month billed monthly, $20/user/month billed annually — https://help.openai.com/en/articles/8792828-what-is-chatgpt-team — verified 2026-05-25
+- Enterprise: Custom pricing (contact sales) — https://chatgpt.com/pricing — verified 2026-05-25
 
 ## Anthropic API direct
-- API usage pricing — TODO URL — verified YYYY-MM-DD
+- Usage-based pricing (per MTok) — https://platform.claude.com/docs/en/docs/about-claude/pricing — verified 2026-05-25
 
 ## OpenAI API direct
-- API usage pricing — TODO URL — verified YYYY-MM-DD
+- Usage-based pricing (per MTok) — https://openai.com/api/pricing — verified 2026-05-25
 
-## Gemini
-- Pro: $20/user/month — TODO URL — verified YYYY-MM-DD
-- Ultra: $35/user/month — TODO URL — verified YYYY-MM-DD
-- API: usage pricing — TODO URL — verified YYYY-MM-DD
+## Gemini API
+- Usage-based pricing (per MTok) — https://ai.google.dev/gemini-api/docs/pricing — verified 2026-05-25
 
 ## Windsurf
-- Starter: $0/user/month — TODO URL — verified YYYY-MM-DD
-- Pro: $15/user/month — TODO URL — verified YYYY-MM-DD
-- Team: $29/user/month — TODO URL — verified YYYY-MM-DD
-- Enterprise: $49/user/month — TODO URL — verified YYYY-MM-DD
+- Free: $0/user/month — https://windsurf.com/pricing — verified 2026-05-25
+- Pro: $20/user/month — https://windsurf.com/pricing — verified 2026-05-25
+- Max: $200/user/month — https://windsurf.com/pricing — verified 2026-05-25
+- Teams: $40/user/month — https://windsurf.com/pricing — verified 2026-05-25
+- Enterprise: Custom pricing (contact sales) — https://windsurf.com/pricing — verified 2026-05-25
