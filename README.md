@@ -10,9 +10,10 @@ A free AI spend audit tool for startup teams to benchmark tool spend, identify p
 - Lead capture with Supabase storage and transactional email delivery.
 
 ## Screenshots
-- TODO: Add screenshot 1 (form)
-- TODO: Add screenshot 2 (audit results)
-- TODO: Add screenshot 3 (shareable audit)
+- Audit Input Form: ![Audit Form: Page-1](image.png)![Audit Form: Page-2](image-1.png)
+- Results: ![Audit Result: Image-1](image-2.png)![Audit Result: Image-2](image-3.png)![Audit Result: Image-3](image-4.png)
+- Sharable Report: ![Sharable Audit Report](image-5.png)
+- Mail: ![Mail: Image-1](image-6.png)![Mail: Image-2](image-7.png)
 
 ## Quick start
 ```bash
@@ -43,7 +44,7 @@ Set these in your local `.env` and in Vercel:
 4. Set `APP_BASE_URL` to your production domain so share links and emails point to the live site.
 5. Deploy.
 
-Deployed URL: TODO
+Deployed URL: https://ai-audit-tool-omega.vercel.app/
 
 ## AI usage disclosure
 I used Claude Sonnet 4.6 primarily for brainstorming workflow planning, architecture discussions, optimization strategies for the audit engine, and refining the recommendation logic for AI tool comparisons. It helped me think through the business reasoning behind identifying overspending patterns, pricing optimization opportunities, and building explainable audit recommendations.
