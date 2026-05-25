@@ -385,7 +385,7 @@ export const AuditResults = ({
                 </button>
                 {leadStatus === "success" && (
                   <span className="text-xs text-emerald-700">
-                    Submitted. We will reach out soon.
+                    Sent, Check your email.
                   </span>
                 )}
                 {leadError && (
